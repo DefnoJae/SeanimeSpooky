@@ -3,7 +3,7 @@ import { fileURLToPath } from 'node:url';
 import { dirname, resolve } from 'node:path';
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 let css = readFileSync(resolve(root, 'src/theme.css'), 'utf8');
-const variables = ['web', 'pumpkin', 'leaf', 'scene'].map(name => {
+const variables = ['web', 'pumpkin', 'leaf', 'scene', 'graveyard', 'bats'].map(name => {
   const svg = readFileSync(resolve(root, `assets/${name}.svg`), 'utf8');
   return `--spooky-${name}: url("data:image/svg+xml,${encodeURIComponent(svg)}");`;
 }).join('\n');
@@ -13,7 +13,7 @@ const plugin = template.replace('/*__THEME_CSS__*/', () => JSON.stringify(css));
 mkdirSync(resolve(root, 'dist'), { recursive: true });
 writeFileSync(resolve(root, 'dist/seanime-spooky.js'), plugin);
 const manifest = {
-  id: 'seanime-spooky', name: 'Seanime Spooky', version: '1.0.0',
+  id: 'seanime-spooky', name: 'Seanime Spooky', version: '1.1.0',
   manifestURI: 'https://raw.githubusercontent.com/DefnoJae/SeanimeSpooky/main/seanime-spooky.json',
   language: 'javascript', type: 'plugin',
   description: 'Halloween theme with pumpkin-orange controls, cobwebs, a haunted moon, pumpkins, and falling leaves.',

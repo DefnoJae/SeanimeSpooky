@@ -31,7 +31,7 @@ const assert = require('node:assert/strict');
       const tray = { text() {}, button() {}, render(fn) { this.fn=fn; fn(); }, update() { this.fn(); } };
       window.$ui = { register(fn) { fn({
         dom: { queryOne: async s => wrap(document.querySelector(s)), createElement: async t => wrap(document.createElement(t)),
-          onReady: fn => {window.spookyReady=fn;} },
+          onReady: fn => {window.spookyReady=fn; fn();} },
         screen: { onNavigate(fn) {window.spookyNav=fn;}, loadCurrent() {window.spookyNav();} },
         newTray: () => tray, eventHandler: (key, fn) => {window.spookyHandlers[key]=fn; return key;},
         toast: {error: message => {throw Error(message);}}
@@ -55,10 +55,19 @@ const assert = require('node:assert/strict');
     await page.emulateMedia({ reducedMotion: 'reduce' });
     assert.equal(await page.locator('.spooky-leaf').first().evaluate(e => getComputedStyle(e).display), 'none');
     await page.evaluate(() => document.body.appendChild(document.createElement('video')));
+    assert.notEqual(await page.locator('[data-seanime-spooky-overlay]').evaluate(e => getComputedStyle(e).display), 'none', 'preview videos must not hide scenery');
+    assert.equal(await page.locator('.spooky-pumpkins').count(), 1);
+    assert.equal(await page.locator('.spooky-bats').evaluate(e => getComputedStyle(e).animationName), 'none');
+    assert.match(await page.locator('h2').evaluate(e => getComputedStyle(e, '::before').backgroundImage), /data:image/);
+    await page.evaluate(() => {
+      const player = document.createElement('div');
+      player.setAttribute('data-media-player', ''); player.setAttribute('data-playing', '');
+      document.body.appendChild(player);
+    });
     assert.equal(await page.locator('[data-seanime-spooky-overlay]').evaluate(e => getComputedStyle(e).display), 'none');
     await page.evaluate(() => window.spookyHandlers['spooky-theme']());
     await page.waitForSelector('[data-seanime-spooky-style]', {state:'detached'});
     assert.equal(await page.evaluate(() => getComputedStyle(document.documentElement).getPropertyValue('--color-brand-500').trim()), '97 82 223');
-    console.log('Browser smoke passed: real CSS parsing, orange branding, click-through decorations, reduced motion, video suppression, theme restoration.');
+    console.log('Browser smoke passed: scenery and pumpkin markers, preview-video regression, active-player suppression, reduced motion, theme restoration.');
   } finally { await browser.close(); }
 })().catch(e => { console.error(e); process.exitCode=1; });

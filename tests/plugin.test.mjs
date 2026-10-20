@@ -41,26 +41,28 @@ function harness() {
   const sandbox = { $ui: { register(fn) { fn(ctx); } }, console: { error(e) { errors.push(e); } } };
   vm.runInNewContext(code, sandbox);
   sandbox.init();
+  hooks.ready();
   const settle = () => new Promise(resolve => setImmediate(resolve));
   const find = attr => [...elements].filter(e => Object.hasOwn(e.attrs, attr));
   return { elements, handlers, hooks, errors, settle, find, head, body };
 }
 test('loads through isolated UI callback and deduplicates simultaneous lifecycle events', async () => {
   const h = harness();
-  h.hooks.ready(); h.hooks.navigate(); h.hooks.main();
+  h.hooks.ready(); h.hooks.ready(); h.hooks.main();
   await h.settle();
   assert.equal(h.find('data-seanime-spooky-style').length, 1);
   const [overlay] = h.find('data-seanime-spooky-overlay');
   assert.equal(overlay.attrs['aria-hidden'], 'true');
   assert.equal(overlay.attrs.inert, '');
-  assert.equal(overlay.children.length, 4);
+  assert.equal(overlay.children.length, 6);
+  assert.equal(h.hooks.navigate, undefined, 'route changes must not trigger backend DOM requests');
   assert.equal(h.errors.length, 0);
 });
 test('toggles restore style and remove all decoration nodes without duplication', async () => {
   const h = harness(); await h.settle();
   h.handlers.get('spooky-theme')(); await h.settle();
   assert.equal(h.elements.size, 0);
-  h.hooks.navigate(); await h.settle();
+  h.hooks.main(); await h.settle();
   assert.equal(h.elements.size, 0);
   h.handlers.get('spooky-theme')(); await h.settle();
   assert.equal(h.find('data-seanime-spooky-style').length, 1);

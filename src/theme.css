@@ -94,24 +94,55 @@ input:focus-visible, textarea:focus-visible, [role="combobox"]:focus-visible {
 
 /* Decorative layer is inert and restricted to margins. No JavaScript in the app DOM. */
 [data-seanime-spooky-overlay] {
-  position: fixed; inset: 0; z-index: 15;
+  position: fixed; inset: 0; z-index: 35;
   pointer-events: none !important; user-select: none;
   overflow: hidden; contain: strict;
 }
 [data-seanime-spooky-overlay]::before {
   content: ""; position: absolute; inset: 0;
-  background-image: var(--spooky-web), var(--spooky-web), var(--spooky-pumpkin);
-  background-position: 72px 0, right bottom, 7px calc(100% - 8px);
-  background-size: 145px 145px, 130px 130px, 64px 64px;
+  background-image: var(--spooky-web), var(--spooky-web), var(--spooky-pumpkin), var(--spooky-leaf);
+  background-position: 72px 0, right bottom, 80px calc(100% - 10px), right 9px top 53%;
+  background-size: 180px 180px, 155px 155px, 74px 74px, 26px 32px;
   background-repeat: no-repeat;
-  opacity: .75;
+  opacity: .9;
 }
 [data-seanime-spooky-overlay]::after {
-  content: ""; position: absolute; top: 28px; right: 22px;
-  width: min(19vw, 290px); height: min(27vw, 390px);
+  content: ""; position: absolute; top: 35px; right: 14px;
+  width: min(20vw, 310px); height: min(29vw, 450px);
   background: var(--spooky-scene) right top / contain no-repeat;
-  opacity: .7;
-  mask-image: linear-gradient(#000 55%, transparent);
+  opacity: .95;
+  mask-image: linear-gradient(#000 80%, transparent);
+}
+[data-seanime-spooky-overlay] .spooky-pumpkins {
+  position: absolute; right: 22px; top: 365px; width: 175px; height: 105px;
+  background: var(--spooky-pumpkin) right bottom / 98px no-repeat,
+    var(--spooky-pumpkin) left bottom / 67px no-repeat;
+  filter: drop-shadow(0 0 13px #ff6e164f);
+}
+[data-seanime-spooky-overlay] .spooky-bats {
+  position: absolute; right: 14px; top: 48px; width: 380px; height: 180px;
+  background: var(--spooky-bats) center / contain no-repeat;
+  animation: spooky-bat-drift 9s ease-in-out infinite alternate;
+}
+@keyframes spooky-bat-drift { to { transform: translate(-12px, 9px); } }
+/* Scenery belongs in the hero itself as well as the corners. */
+body:has([data-seanime-spooky-overlay]) [data-media-page-header]::before {
+  content: ""; position: absolute; inset: 0; z-index: 0; pointer-events: none;
+  background: var(--spooky-graveyard) right bottom / auto 170px no-repeat,
+    radial-gradient(ellipse at 95% 40%, #e75b1155, transparent 55%);
+}
+body:has([data-seanime-spooky-overlay]) [data-library-header-container]::after {
+  content: ""; position: absolute; inset: 0; z-index: 1; pointer-events: none;
+  background: var(--spooky-graveyard) right bottom / auto 145px no-repeat,
+    radial-gradient(ellipse at 94% 22%, #e75b1145, transparent 55%);
+}
+body:has([data-seanime-spooky-overlay]) .UI-AppLayoutContent__root h2::before {
+  content: ""; display: inline-block; width: 32px; height: 32px; margin-right: 10px;
+  vertical-align: -4px; background: var(--spooky-pumpkin) center / contain no-repeat;
+}
+body:has([data-seanime-spooky-overlay]) [data-schedule-calendar-header] {
+  background: var(--spooky-bats) right 100px center / 180px no-repeat,
+    linear-gradient(100deg, #391506, #100a06 65%);
 }
 [data-media-page-header] { isolation: isolate; }
 [data-media-page-header]::after {
@@ -125,29 +156,32 @@ input:focus-visible, textarea:focus-visible, [role="combobox"]:focus-visible {
   opacity: .55; top: -30px;
   animation: spooky-fall 22s linear infinite;
 }
-[data-seanime-spooky-overlay] .spooky-leaf:nth-child(1) { left: 4.5%; animation-delay: -3s; }
-[data-seanime-spooky-overlay] .spooky-leaf:nth-child(2) { right: .8%; animation-delay: -13s; animation-duration: 27s; }
-[data-seanime-spooky-overlay] .spooky-leaf:nth-child(3) { left: 6%; animation-delay: -19s; animation-duration: 31s; }
-[data-seanime-spooky-overlay] .spooky-leaf:nth-child(4) { right: 2%; animation-delay: -7s; animation-duration: 24s; }
+[data-seanime-spooky-overlay] .spooky-leaf:nth-child(3) { left: 4.5%; animation-delay: -3s; }
+[data-seanime-spooky-overlay] .spooky-leaf:nth-child(4) { right: .8%; animation-delay: -13s; animation-duration: 27s; }
+[data-seanime-spooky-overlay] .spooky-leaf:nth-child(5) { left: 6%; animation-delay: -19s; animation-duration: 31s; }
+[data-seanime-spooky-overlay] .spooky-leaf:nth-child(6) { right: 2%; animation-delay: -7s; animation-duration: 24s; }
 @keyframes spooky-fall {
   0% { transform: translate(0, -30px) rotate(0); }
   50% { transform: translate(14px, 52vh) rotate(170deg); }
   100% { transform: translate(-5px, 110vh) rotate(330deg); }
 }
-/* Hide ALL ornaments for active players/readers and fullscreen. */
-body:has(video) [data-seanime-spooky-overlay],
-body:has([data-media-player]) [data-seanime-spooky-overlay],
-body:has([data-vc-element="drawer-content"]) [data-seanime-spooky-overlay],
+/* Preview videos often remain mounted on home/details. Only active player UI hides scenery. */
+body:has([data-media-player][data-playing]) [data-seanime-spooky-overlay],
+body:has([data-vc-element="drawer-content"][data-state="open"]) [data-seanime-spooky-overlay],
+body:has([data-native-player-container]) [data-seanime-spooky-overlay],
 body:has([data-manga-reader]) [data-seanime-spooky-overlay],
 html:has(:fullscreen) [data-seanime-spooky-overlay] { display: none !important; }
 @media (max-width: 900px) {
-  [data-seanime-spooky-overlay]::after { display: none; }
+  [data-seanime-spooky-overlay]::after, [data-seanime-spooky-overlay] .spooky-pumpkins,
+  [data-seanime-spooky-overlay] .spooky-bats { display: none; }
   [data-seanime-spooky-overlay]::before { background-size: 80px, 70px, 38px; opacity: .45; }
   [data-seanime-spooky-overlay] .spooky-leaf { display: none; }
 }
 @media (prefers-reduced-motion: reduce) {
   [data-seanime-spooky-overlay] .spooky-leaf { display: none; animation: none; }
+  [data-seanime-spooky-overlay] .spooky-bats { animation: none; }
   [data-episode-card-image-container] { transition: none; }
 }
 [data-seanime-spooky-overlay][data-motion="off"] .spooky-leaf { display: none; animation: none; }
+[data-seanime-spooky-overlay][data-motion="off"] .spooky-bats { animation: none; }
 @media print { [data-seanime-spooky-overlay] { display: none; } }

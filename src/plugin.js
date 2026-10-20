@@ -8,13 +8,20 @@ function init() {
     var decorations = true;
     var motion = true;
     var pending = Promise.resolve();
+    var scheduled = false;
+    var dirty = false;
 
     // Serialize updates so ready/navigation/toggle events never create duplicate layers.
     function schedule() {
-      pending = pending.then(apply).catch(function (error) {
+      dirty = true;
+      if (scheduled) return pending;
+      scheduled = true;
+      pending = pending.then(async function () {
+        while (dirty) { dirty = false; await apply(); }
+      }).catch(function (error) {
         console.error("Seanime Spooky: " + error);
         ctx.toast.error("Seanime Spooky could not apply the theme. Toggle it to retry.");
-      });
+      }).then(function () { scheduled = false; });
       return pending;
     }
     async function apply() {
@@ -45,6 +52,12 @@ function init() {
         overlay.setAttribute("aria-hidden", "true");
         overlay.setAttribute("inert", "");
         overlay.setAttribute("role", "presentation");
+        var scenery = await ctx.dom.createElement("div");
+        scenery.addClass("spooky-pumpkins");
+        overlay.append(scenery);
+        var bats = await ctx.dom.createElement("div");
+        bats.addClass("spooky-bats");
+        overlay.append(bats);
         for (var i = 0; i < 4; i++) {
           var leaf = await ctx.dom.createElement("span");
           leaf.addClass("spooky-leaf");
@@ -75,11 +88,10 @@ function init() {
       tray.button("Theme: " + (enabled ? "On" : "Off"), { onClick: toggleTheme });
       tray.button("Decorations: " + (decorations ? "On" : "Off"), { onClick: toggleDecorations });
       tray.button("Falling leaves: " + (motion ? "On" : "Off"), { onClick: toggleMotion });
-      tray.text("Decorations hide during video playback. Reduced motion is respected. Disable the plugin to restore your theme.");
+      tray.text("Moonlit castle, pumpkin clusters, bats and cobwebs. Decorations hide around active players; hidden previews no longer hide the theme. Reduced motion is respected.");
     });
     ctx.dom.onReady(schedule);
     if (ctx.dom.onMainTabReady) ctx.dom.onMainTabReady(schedule);
-    ctx.screen.onNavigate(schedule);
-    ctx.screen.loadCurrent();
+    // Fixed CSS/layers survive route changes. Do not send DOM requests on every navigation.
   });
 }

@@ -2,6 +2,8 @@
 
 A Halloween theme for Seanime inspired by the supplied orange-and-black references: pumpkin-orange controls, glowing selected navigation, warm dark surfaces, cobwebs, a haunted moon and castle, pumpkins, and optional falling autumn leaves.
 
+Version 1.1.0 adds larger moon-and-castle scenery, pumpkin clusters, drifting bats, graveyard silhouettes in anime and library headers, and pumpkin section markers. It fixes decorations disappearing when hidden preview videos are mounted. DOM setup is coalesced and no longer repeats on every route change.
+
 ## Install
 
 In Seanime, open **Extensions → Add extensions** and paste:
@@ -19,7 +21,7 @@ Enable **Seanime Spooky**. Use its pumpkin tray icon to toggle the theme, decora
 - Home and Continue Watching: orange accents, warm surfaces and episode outlines.
 - Library: poster outlines, orange progress bars and hover highlights.
 - Anime details and torrent episodes: warm banner glow, branded buttons and tabs.
-- Online streaming: orange tabs and controls; decorations automatically hide whenever a video/player is present, including fullscreen.
+- Online streaming: orange tabs and controls; decorations hide for active players and fullscreen. Hidden preview videos do not suppress the Halloween scenery.
 - Extensions: shared orange branding, tabs, borders and form controls.
 - Release schedule: warm header, calendar outlines, orange brand highlights.
 
