@@ -1,1 +1,19 @@
-
+{
+  "id": "seanime-spooky",
+  "name": "Seanime Spooky",
+  "version": "1.0.0",
+  "manifestURI": "https://raw.githubusercontent.com/DefnoJae/SeanimeSpooky/main/seanime-spooky.json",
+  "language": "javascript",
+  "type": "plugin",
+  "description": "Halloween theme with pumpkin-orange controls, cobwebs, a haunted moon, pumpkins, and falling leaves.",
+  "author": "DefnoJae",
+  "lang": "multi",
+  "icon": "https://raw.githubusercontent.com/DefnoJae/SeanimeSpooky/main/assets/pumpkin.svg",
+  "website": "https://github.com/DefnoJae/SeanimeSpooky",
+  "readme": "https://raw.githubusercontent.com/DefnoJae/SeanimeSpooky/main/README.md",
+  "payloadURI": "https://raw.githubusercontent.com/DefnoJae/SeanimeSpooky/main/dist/seanime-spooky.js",
+  "plugin": {
+    "version": "1",
+    "permissions": {}
+  }
+}

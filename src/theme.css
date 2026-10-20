@@ -1,0 +1,153 @@
+/* All rules disappear when the plugin is disabled. Never filter posters or video. */
+html:root, html.dark, html[data-mode="dark"] {
+  --color-brand-50: 255 247 237 !important;
+  --color-brand-100: 255 237 213 !important;
+  --color-brand-200: 254 215 170 !important;
+  --color-brand-300: 253 186 116 !important;
+  --color-brand-400: 251 146 60 !important;
+  --color-brand-500: 249 115 22 !important;
+  --color-brand-600: 234 88 12 !important;
+  --color-brand-700: 194 65 12 !important;
+  --color-brand-800: 154 52 18 !important;
+  --color-brand-900: 124 45 18 !important;
+  --color-brand-950: 67 20 7 !important;
+  --color-brand-default: 249 115 22 !important;
+  --background: #090604 !important;
+  --foreground: #f4e9df !important;
+  --paper: #100b08 !important;
+  --paper-lighter: #1a100a !important;
+  --border: rgb(249 115 22 / .22) !important;
+  --ring: #fb923c !important;
+  --brand: #fdba74 !important;
+  --muted: #b2a49b !important;
+  --muted-highlight: #d3bba8 !important;
+  --subtle: rgb(249 115 22 / .05) !important;
+  --subtle-highlight: rgb(249 115 22 / .12) !important;
+  --media-card-popup-background: #140d08 !important;
+  --hover-from-background-color: #1a100a !important;
+}
+html { scrollbar-color: #8b431d #100b08; }
+::selection { background: #c2410c; color: white; }
+.UI-AppLayoutSidebar__root {
+  background: linear-gradient(180deg, #0c0806f5, #160c05f5) !important;
+  border-right: 1px solid #a94b1d45 !important;
+}
+.UI-AppLayoutSidebar__root .UI-VerticalMenu__item { color: #f5a064; }
+.UI-AppLayoutSidebar__root [data-current="true"] {
+  color: #fff1dd !important;
+  background: #6e290c55 !important;
+  box-shadow: inset 0 0 0 1px #f97316, 0 0 12px #ea580c65;
+  border-radius: 14px;
+}
+.UI-AppLayoutContent__root { background-color: transparent !important; }
+.UI-Button__root:not(:disabled):hover, button:not(:disabled):focus-visible, a:focus-visible {
+  outline-color: #fb923c !important;
+}
+.UI-Button__root:not(:disabled):hover { box-shadow: 0 0 12px #ea580c40; }
+[role="tab"][data-state="active"], [role="tab"][aria-selected="true"] {
+  background: linear-gradient(#682909, #2d1308) !important;
+  color: #fff2e5 !important;
+  box-shadow: inset 0 0 0 1px #f97316, 0 0 10px #f9731630;
+}
+[role="switch"][data-state="checked"], [role="checkbox"][data-state="checked"],
+[role="progressbar"] > div { background-color: #f97316 !important; }
+input:not([type="range"]), textarea, [role="combobox"] {
+  border-color: #a54e265c !important;
+}
+input:focus-visible, textarea:focus-visible, [role="combobox"]:focus-visible {
+  outline: 2px solid #fb923c !important;
+  outline-offset: 2px;
+}
+[data-episode-card-image-container] {
+  box-shadow: 0 0 0 1px #e96e2860;
+  transition: box-shadow .18s ease;
+}
+[data-episode-card]:hover [data-episode-card-image-container] {
+  box-shadow: 0 0 0 1px #fb923c, 0 0 16px #ea580c40;
+}
+[data-media-entry-card-body] {
+  box-shadow: 0 0 0 1px #e96e2860;
+}
+[data-media-entry-card-container]:hover [data-media-entry-card-body] {
+  box-shadow: 0 0 0 1px #fb923c, 0 0 16px #ea580c40;
+}
+[data-media-entry-card-body-progress-bar], [data-media-entry-card-hover-popup-banner-progress-bar] {
+  background-color: #f97316 !important;
+}
+[data-episode-card-title], [data-media-page-header-entry-details-title-container] h1 {
+  text-shadow: 0 1px 8px #e85b1230;
+}
+[data-episode-card-progress-bar-container] [class*="bg-brand"] {
+  background-color: #f97316 !important;
+}
+[data-schedule-calendar] {
+  border-color: #b6532655 !important;
+  background-color: #0c0805 !important;
+}
+[data-schedule-calendar-header] {
+  background: linear-gradient(100deg, #221006, #100a06 65%);
+}
+[data-schedule-calendar-day-item] { box-shadow: inset 0 0 0 1px #b653262b; }
+[data-schedule-calendar-day-item]:hover { box-shadow: inset 0 0 0 1px #fb923c; }
+[data-schedule-calendar-day-date].bg-brand-500 { background: #f97316 !important; }
+[data-media-player], media-controller { --media-accent-color: #fb923c; }
+
+/* Decorative layer is inert and restricted to margins. No JavaScript in the app DOM. */
+[data-seanime-spooky-overlay] {
+  position: fixed; inset: 0; z-index: 15;
+  pointer-events: none !important; user-select: none;
+  overflow: hidden; contain: strict;
+}
+[data-seanime-spooky-overlay]::before {
+  content: ""; position: absolute; inset: 0;
+  background-image: var(--spooky-web), var(--spooky-web), var(--spooky-pumpkin);
+  background-position: 72px 0, right bottom, 7px calc(100% - 8px);
+  background-size: 145px 145px, 130px 130px, 64px 64px;
+  background-repeat: no-repeat;
+  opacity: .75;
+}
+[data-seanime-spooky-overlay]::after {
+  content: ""; position: absolute; top: 28px; right: 22px;
+  width: min(19vw, 290px); height: min(27vw, 390px);
+  background: var(--spooky-scene) right top / contain no-repeat;
+  opacity: .7;
+  mask-image: linear-gradient(#000 55%, transparent);
+}
+[data-media-page-header] { isolation: isolate; }
+[data-media-page-header]::after {
+  content: ""; position: absolute; inset: 0; z-index: 0; pointer-events: none;
+  background: radial-gradient(ellipse at 90% 22%, #f9731635, transparent 55%);
+}
+[data-media-page-header-details-container] { position: relative; z-index: 1; }
+[data-seanime-spooky-overlay] .spooky-leaf {
+  position: absolute; width: 18px; height: 22px;
+  background: var(--spooky-leaf) center / contain no-repeat;
+  opacity: .55; top: -30px;
+  animation: spooky-fall 22s linear infinite;
+}
+[data-seanime-spooky-overlay] .spooky-leaf:nth-child(1) { left: 4.5%; animation-delay: -3s; }
+[data-seanime-spooky-overlay] .spooky-leaf:nth-child(2) { right: .8%; animation-delay: -13s; animation-duration: 27s; }
+[data-seanime-spooky-overlay] .spooky-leaf:nth-child(3) { left: 6%; animation-delay: -19s; animation-duration: 31s; }
+[data-seanime-spooky-overlay] .spooky-leaf:nth-child(4) { right: 2%; animation-delay: -7s; animation-duration: 24s; }
+@keyframes spooky-fall {
+  0% { transform: translate(0, -30px) rotate(0); }
+  50% { transform: translate(14px, 52vh) rotate(170deg); }
+  100% { transform: translate(-5px, 110vh) rotate(330deg); }
+}
+/* Hide ALL ornaments for active players/readers and fullscreen. */
+body:has(video) [data-seanime-spooky-overlay],
+body:has([data-media-player]) [data-seanime-spooky-overlay],
+body:has([data-vc-element="drawer-content"]) [data-seanime-spooky-overlay],
+body:has([data-manga-reader]) [data-seanime-spooky-overlay],
+html:has(:fullscreen) [data-seanime-spooky-overlay] { display: none !important; }
+@media (max-width: 900px) {
+  [data-seanime-spooky-overlay]::after { display: none; }
+  [data-seanime-spooky-overlay]::before { background-size: 80px, 70px, 38px; opacity: .45; }
+  [data-seanime-spooky-overlay] .spooky-leaf { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  [data-seanime-spooky-overlay] .spooky-leaf { display: none; animation: none; }
+  [data-episode-card-image-container] { transition: none; }
+}
+[data-seanime-spooky-overlay][data-motion="off"] .spooky-leaf { display: none; animation: none; }
+@media print { [data-seanime-spooky-overlay] { display: none; } }
