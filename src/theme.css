@@ -100,7 +100,7 @@ input:focus-visible, textarea:focus-visible, [role="combobox"]:focus-visible {
 }
 [data-seanime-spooky-overlay]::before {
   content: ""; position: absolute; inset: 0;
-  background-image: var(--spooky-web), var(--spooky-web), var(--spooky-pumpkin), var(--spooky-leaf);
+  background-image: var(--spooky-web), var(--spooky-web-bottom), var(--spooky-pumpkin), var(--spooky-leaf);
   background-position: 72px 0, right bottom, 80px calc(100% - 10px), right 9px top 53%;
   background-size: 180px 180px, 155px 155px, 74px 74px, 26px 32px;
   background-repeat: no-repeat;
@@ -117,7 +117,6 @@ input:focus-visible, textarea:focus-visible, [role="combobox"]:focus-visible {
   position: absolute; right: 22px; top: 365px; width: 175px; height: 105px;
   background: var(--spooky-pumpkin) right bottom / 98px no-repeat,
     var(--spooky-pumpkin) left bottom / 67px no-repeat;
-  filter: drop-shadow(0 0 13px #ff6e164f);
 }
 [data-seanime-spooky-overlay] .spooky-bats {
   position: absolute; right: 14px; top: 48px; width: 380px; height: 180px;
@@ -190,7 +189,7 @@ html:has(:fullscreen) [data-seanime-spooky-overlay] { display: none !important; 
 [data-seanime-spooky-overlay] .spooky-ghost {
   position: absolute; left: 83px; bottom: 12%; width: 52px; height: 70px;
   background: var(--spooky-ghost) center / contain no-repeat;
-  opacity: .78; filter: drop-shadow(0 0 10px #ffc48a40);
+  opacity: .78;
   animation: spooky-ghost-float 7s ease-in-out infinite alternate;
 }
 [data-seanime-spooky-overlay] .spooky-spider {
@@ -201,13 +200,12 @@ html:has(:fullscreen) [data-seanime-spooky-overlay] { display: none !important; 
 [data-seanime-spooky-overlay] .spooky-lanterns {
   position: absolute; top: 0; left: 260px; right: 330px; height: 72px;
   background: var(--spooky-lanterns) center top / auto 72px repeat-x;
-  opacity: .85; filter: drop-shadow(0 0 6px #ff741e60);
+  opacity: .85;
 }
 [data-seanime-spooky-overlay] .spooky-fog {
   position: absolute; left: 72px; right: 0; bottom: -35px; height: 115px;
   background: radial-gradient(ellipse at 15% 90%, #c5672a35, transparent 60%),
     radial-gradient(ellipse at 75% 95%, #e3b89a25, transparent 55%);
-  animation: spooky-fog-drift 19s ease-in-out infinite alternate;
 }
 [data-seanime-spooky-overlay] .spooky-embers {
   position: absolute; right: 4px; top: 20%; bottom: 0; width: 26px;
@@ -218,7 +216,7 @@ html:has(:fullscreen) [data-seanime-spooky-overlay] { display: none !important; 
 @keyframes spooky-ghost-float { to { transform: translate(10px, -30px) rotate(6deg); opacity: .55; } }
 @keyframes spooky-spider-sway { from { transform: rotate(-6deg); } to { transform: rotate(6deg); } }
 @keyframes spooky-fog-drift { to { transform: translateX(30px) scaleX(1.1); opacity: .5; } }
-@keyframes spooky-embers-rise { to { background-position: 0 -230px, 0 -340px; } }
+@keyframes spooky-embers-rise { to { transform: translateY(-115px); } }
 body:has([data-haunt="full"]) [data-media-entry-card-body]::after,
 body:has([data-haunt="full"]) [data-episode-card-image-container]::after {
   content: ""; position: absolute; top: 0; left: 0; width: 65px; height: 65px;
@@ -248,3 +246,24 @@ body:has([data-haunt="full"]) [data-schedule-calendar-header]::before {
   [data-seanime-spooky-overlay] :is(.spooky-spider, .spooky-lanterns, .spooky-fog, .spooky-embers) { display: none; }
   [data-seanime-spooky-overlay] .spooky-ghost { width: 30px; height: 40px; left: auto; right: 6px; bottom: 10px; animation: none; }
 }
+
+/* Player containers exist while paused/loading too. Preview-only <video> tags are excluded. */
+body:has(:is([data-vc-element="container"], [data-vc-element="inline-container"],
+  [data-vc-element="drawer-content"], [data-video-core-element], [data-native-player-drawer],
+  [data-native-player-container], [data-media-player], media-controller, video[controls])),
+html:has(:fullscreen) body {
+  --spooky-ornament-display: none;
+}
+[data-seanime-spooky-overlay] { display: var(--spooky-ornament-display, block); }
+body [data-seanime-spooky-overlay] { display: var(--spooky-ornament-display, block); }
+body:has([data-seanime-spooky-overlay]) :is([data-media-page-header], [data-library-header-container])::before,
+body:has([data-seanime-spooky-overlay]) :is([data-media-page-header], [data-library-header-container])::after,
+body:has([data-haunt="full"]) :is([data-media-entry-card-body], [data-episode-card-image-container])::after {
+  display: var(--spooky-ornament-display, block);
+}
+body:has([data-seanime-spooky-overlay]) .UI-AppLayoutContent__root h2::before,
+body:has([data-haunt="full"]) [data-schedule-calendar-header]::before {
+  display: var(--spooky-ornament-display, inline-block);
+}
+/* Two falling leaves are sufficient; avoid animating every ornament. */
+[data-seanime-spooky-overlay] .spooky-leaf:nth-last-child(-n+2) { display: none; animation: none; }

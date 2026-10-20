@@ -78,7 +78,7 @@ function init() {
     }
 
     var tray = ctx.newTray({
-      iconUrl: "https://raw.githubusercontent.com/DefnoJae/SeanimeSpooky/main/assets/pumpkin.svg",
+      iconUrl: "https://raw.githubusercontent.com/DefnoJae/SeanimeSpooky/main/assets/icon.png",
       withContent: true,
       width: "300px"
     });

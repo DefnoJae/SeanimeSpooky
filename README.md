@@ -1,5 +1,7 @@
 # Seanime Spooky
 
+Version 1.3.0 hides all theme ornaments for video-core, inline, paused/loading, native and HTML-control players as well as fullscreen. The bottom-right web is rotated to attach to that corner. Rendering work is reduced: static fog, two falling leaves, transform-based embers, and no blur/drop-shadow filters on animated ornaments. A dedicated 256px PNG pumpkin logo is provided for the marketplace and tray. These changes reduce rendering work; live Seanime performance still depends on the device and other extensions.
+
 Version 1.2.1 fixes the Goja `addClass` bridge error reported during decoration setup. Ornament classes now use `setAttribute`, and the lifecycle test explicitly simulates the broken `addClass` binding.
 
 ## New in 1.2.0 — Full haunt

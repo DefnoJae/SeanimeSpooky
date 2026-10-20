@@ -69,15 +69,32 @@ const assert = require('node:assert/strict');
     assert.equal(await page.locator('.spooky-pumpkins').count(), 1);
     assert.equal(await page.locator('.spooky-bats').evaluate(e => getComputedStyle(e).animationName), 'none');
     assert.match(await page.locator('h2').evaluate(e => getComputedStyle(e, '::before').backgroundImage), /data:image/);
-    await page.evaluate(() => {
-      const player = document.createElement('div');
-      player.setAttribute('data-media-player', ''); player.setAttribute('data-playing', '');
-      document.body.appendChild(player);
-    });
-    assert.equal(await page.locator('[data-seanime-spooky-overlay]').evaluate(e => getComputedStyle(e).display), 'none');
+    // Paused/windowed players have no data-playing or data-state=open marker.
+    for (const attrs of [
+      {'data-vc-element':'container'}, {'data-vc-element':'inline-container'},
+      {'data-vc-element':'drawer-content'}, {'data-video-core-element':''},
+      {'data-native-player-drawer':''}, {'data-media-player':''}, {'controls':''}
+    ]) {
+      await page.evaluate(attrs => {
+        const player = document.createElement('controls' in attrs ? 'video' : 'div');
+        player.id = 'test-player';
+        for (const [k,v] of Object.entries(attrs)) player.setAttribute(k,v);
+        document.body.appendChild(player);
+      }, attrs);
+      assert.equal(await page.locator('[data-seanime-spooky-overlay]').evaluate(e => getComputedStyle(e).display), 'none', JSON.stringify(attrs));
+      assert.equal(await page.locator('h2').evaluate(e => getComputedStyle(e, '::before').display), 'none');
+      assert.equal(await page.locator('[data-episode-card-image-container]').evaluate(e => getComputedStyle(e, '::after').display), 'none');
+      await page.locator('#test-player').evaluate(e => e.remove());
+      assert.notEqual(await page.locator('[data-seanime-spooky-overlay]').evaluate(e => getComputedStyle(e).display), 'none');
+    }
+    const corner = await page.evaluate(() => getComputedStyle(document.documentElement).getPropertyValue('--spooky-web-bottom'));
+    assert.match(decodeURIComponent(corner), /translate\(180 180\) rotate\(180\)/);
+    assert.equal(await page.locator('.spooky-fog').evaluate(e => getComputedStyle(e).animationName), 'none');
+    await page.emulateMedia({reducedMotion:'no-preference'});
+    assert.ok(await page.evaluate(() => document.getAnimations().length) <= 6, 'animation budget');
     await page.evaluate(() => window.spookyHandlers['spooky-theme']());
     await page.waitForSelector('[data-seanime-spooky-style]', {state:'detached'});
     assert.equal(await page.evaluate(() => getComputedStyle(document.documentElement).getPropertyValue('--color-brand-500').trim()), '97 82 223');
-    console.log('Browser smoke passed: Full haunt ornaments, Classic toggle, all reduced-motion animations, preview regression, player suppression and theme restoration.');
+    console.log('Browser smoke passed: seven paused/windowed player variants hide all ornaments; preview preserved; web rotated; animation budget; motion and theme toggles.');
   } finally { await browser.close(); }
 })().catch(e => { console.error(e); process.exitCode=1; });

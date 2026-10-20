@@ -7,18 +7,20 @@ const variables = ['web', 'pumpkin', 'leaf', 'scene', 'graveyard', 'bats', 'ghos
   const svg = readFileSync(resolve(root, `assets/${name}.svg`), 'utf8');
   return `--spooky-${name}: url("data:image/svg+xml,${encodeURIComponent(svg)}");`;
 }).join('\n');
-css = `:root {\n${variables}\n}\n${css}`;
+const web = readFileSync(resolve(root, 'assets/web.svg'), 'utf8');
+const rotatedWeb = web.replace('<g ', '<g transform="translate(180 180) rotate(180)" ');
+css = `:root {\n${variables}\n--spooky-web-bottom: url("data:image/svg+xml,${encodeURIComponent(rotatedWeb)}");\n}\n${css}`;
 const template = readFileSync(resolve(root, 'src/plugin.js'), 'utf8');
 const plugin = template.replace('/*__THEME_CSS__*/', () => JSON.stringify(css));
 mkdirSync(resolve(root, 'dist'), { recursive: true });
 writeFileSync(resolve(root, 'dist/seanime-spooky.js'), plugin);
 const manifest = {
-  id: 'seanime-spooky', name: 'Seanime Spooky', version: '1.2.1',
+  id: 'seanime-spooky', name: 'Seanime Spooky', version: '1.3.0',
   manifestURI: 'https://raw.githubusercontent.com/DefnoJae/SeanimeSpooky/main/seanime-spooky.json',
   language: 'javascript', type: 'plugin',
   description: 'Halloween theme with pumpkin-orange controls, cobwebs, a haunted moon, pumpkins, and falling leaves.',
   author: 'DefnoJae', lang: 'multi',
-  icon: 'https://raw.githubusercontent.com/DefnoJae/SeanimeSpooky/main/assets/pumpkin.svg',
+  icon: 'https://raw.githubusercontent.com/DefnoJae/SeanimeSpooky/main/assets/icon.png',
   website: 'https://github.com/DefnoJae/SeanimeSpooky',
   readme: 'https://raw.githubusercontent.com/DefnoJae/SeanimeSpooky/main/README.md',
   payloadURI: 'https://raw.githubusercontent.com/DefnoJae/SeanimeSpooky/main/dist/seanime-spooky.js',
