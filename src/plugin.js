@@ -54,21 +54,21 @@ function init() {
         overlay.setAttribute("inert", "");
         overlay.setAttribute("role", "presentation");
         var scenery = await ctx.dom.createElement("div");
-        scenery.addClass("spooky-pumpkins");
+        scenery.setAttribute("class", "spooky-pumpkins");
         overlay.append(scenery);
         var bats = await ctx.dom.createElement("div");
-        bats.addClass("spooky-bats");
+        bats.setAttribute("class", "spooky-bats");
         overlay.append(bats);
         // A fixed number of CSS-animated ornaments; no animation timers or polling.
         var ornaments = ["spooky-ghost", "spooky-spider", "spooky-lanterns", "spooky-fog", "spooky-embers"];
         for (var n = 0; n < ornaments.length; n++) {
           var ornament = await ctx.dom.createElement("div");
-          ornament.addClass(ornaments[n]);
+          ornament.setAttribute("class", ornaments[n]);
           overlay.append(ornament);
         }
         for (var i = 0; i < 4; i++) {
           var leaf = await ctx.dom.createElement("span");
-          leaf.addClass("spooky-leaf");
+          leaf.setAttribute("class", "spooky-leaf");
           overlay.append(leaf);
         }
         body.append(overlay);

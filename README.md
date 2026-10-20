@@ -1,5 +1,7 @@
 # Seanime Spooky
 
+Version 1.2.1 fixes the Goja `addClass` bridge error reported during decoration setup. Ornament classes now use `setAttribute`, and the lifecycle test explicitly simulates the broken `addClass` binding.
+
 ## New in 1.2.0 — Full haunt
 
 Floating ghosts, a swinging hanging spider, pumpkin lantern strings, drifting ground fog, rising embers, cobweb corners on anime/episode cards, a glowing logo, and a pumpkin calendar header join the existing moon, castle, bats, graveyard and leaves. Full haunt is enabled by default; the pumpkin tray's **Haunt level** button switches to Classic. **Animation** stops all movement; system reduced-motion does the same automatically. Narrow screens simplify the decorations. All ornaments remain click-through and use CSS animations, with no polling or animation timers.

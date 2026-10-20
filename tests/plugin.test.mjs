@@ -14,7 +14,8 @@ function harness() {
     const el = { tag, attrs: {}, children: [], text: '',
       setAttribute(k, v) { this.attrs[k] = v; },
       setText(v) { this.text = v; },
-      addClass(v) { this.attrs.class = v; },
+      // Reproduce the user's Goja bridge failure instead of masking it with a browser implementation.
+      addClass() { throw new TypeError('could not convert function call parameter 0 to goja.FunctionCall'); },
       append(child) { this.children.push(child); elements.add(child); },
       remove() { elements.delete(this); for (const child of this.children) child.remove(); }
     };
@@ -55,6 +56,11 @@ test('loads through isolated UI callback and deduplicates simultaneous lifecycle
   assert.equal(overlay.attrs['aria-hidden'], 'true');
   assert.equal(overlay.attrs.inert, '');
   assert.equal(overlay.children.length, 11);
+  assert.deepEqual(overlay.children.map(e => e.attrs.class), [
+    'spooky-pumpkins', 'spooky-bats', 'spooky-ghost', 'spooky-spider',
+    'spooky-lanterns', 'spooky-fog', 'spooky-embers',
+    'spooky-leaf', 'spooky-leaf', 'spooky-leaf', 'spooky-leaf'
+  ]);
   assert.equal(overlay.attrs['data-haunt'], 'full');
   assert.equal(h.hooks.navigate, undefined, 'route changes must not trigger backend DOM requests');
   assert.equal(h.errors.length, 0);
