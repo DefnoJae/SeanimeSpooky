@@ -22,7 +22,21 @@ function harness() {
     return el;
   }
   const head = element('head'), body = element('body');
-  const tray = { text() {}, button() {}, render(fn) { render = fn; fn(); }, update() { render(); } };
+  let tree;
+  function renderTray() {
+    tree = render();
+    function validate(node) {
+      assert.ok(node && ['stack','text','button'].includes(node.type), 'render must return a registered component');
+      if (node.type === 'stack') node.props.items.forEach(validate);
+    }
+    validate(tree);
+  }
+  const tray = {
+    text(text, props = {}) { return {type:'text',props:{text,...props}}; },
+    button(label, props = {}) { return {type:'button',props:{label,...props}}; },
+    stack(props) { return {type:'stack',props}; },
+    render(fn) { render = fn; renderTray(); }, update: renderTray
+  };
   const ctx = {
     dom: {
       async queryOne(selector) {
@@ -45,8 +59,20 @@ function harness() {
   hooks.ready();
   const settle = () => new Promise(resolve => setImmediate(resolve));
   const find = attr => [...elements].filter(e => Object.hasOwn(e.attrs, attr));
-  return { elements, handlers, hooks, errors, settle, find, head, body };
+  return { elements, handlers, hooks, errors, settle, find, head, body, getTree: () => tree };
 }
+test('tray returns a registered component tree and updates all four controls', async () => {
+  const h = harness(); await h.settle();
+  const buttons = () => h.getTree().props.items.filter(c => c.type === 'button');
+  assert.equal(h.getTree().type, 'stack');
+  assert.equal(buttons().length, 4);
+  for (const button of buttons()) h.handlers.get(button.props.onClick)();
+  await h.settle();
+  assert.deepEqual(Array.from(buttons(), b => b.props.label), [
+    'Theme: Off', 'Decorations: Off', 'Animation: Off', 'Haunt level: Classic'
+  ]);
+  assert.equal(h.elements.size, 0);
+});
 test('loads through isolated UI callback and deduplicates simultaneous lifecycle events', async () => {
   const h = harness();
   h.hooks.ready(); h.hooks.ready(); h.hooks.main();

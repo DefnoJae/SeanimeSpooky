@@ -28,7 +28,17 @@ const assert = require('node:assert/strict');
         addClass: cls => el.classList.add(cls), append: child => el.appendChild(child.el),
         remove: () => el.remove(), el
       });
-      const tray = { text() {}, button() {}, render(fn) { this.fn=fn; fn(); }, update() { this.fn(); } };
+      const tray = {
+        text: (text, props = {}) => ({type:'text',props:{text,...props}}),
+        button: (label, props = {}) => ({type:'button',props:{label,...props}}),
+        stack: props => ({type:'stack',props}),
+        render(fn) { this.fn=fn; this.update(); },
+        update() {
+          const tree = this.fn();
+          if (!tree || tree.type !== 'stack') throw Error('Missing tray component tree');
+          window.spookyTrayTree = tree;
+        }
+      };
       window.$ui = { register(fn) { fn({
         dom: { queryOne: async s => wrap(document.querySelector(s)), createElement: async t => wrap(document.createElement(t)),
           onReady: fn => {window.spookyReady=fn; fn();} },

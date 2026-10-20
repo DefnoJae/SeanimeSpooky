@@ -15,7 +15,7 @@ const plugin = template.replace('/*__THEME_CSS__*/', () => JSON.stringify(css));
 mkdirSync(resolve(root, 'dist'), { recursive: true });
 writeFileSync(resolve(root, 'dist/seanime-spooky.js'), plugin);
 const manifest = {
-  id: 'seanime-spooky', name: 'Seanime Spooky', version: '1.3.0',
+  id: 'seanime-spooky', name: 'Seanime Spooky', version: '1.3.1',
   manifestURI: 'https://raw.githubusercontent.com/DefnoJae/SeanimeSpooky/main/seanime-spooky.json',
   language: 'javascript', type: 'plugin',
   description: 'Halloween theme with pumpkin-orange controls, cobwebs, a haunted moon, pumpkins, and falling leaves.',

@@ -95,13 +95,15 @@ function init() {
       fullHaunt = !fullHaunt; schedule(); tray.update();
     });
     tray.render(function () {
-      tray.text("Seanime Spooky", { style: { fontWeight: "700", fontSize: "18px" } });
-      tray.text("Pumpkin orange, haunted corners, and autumn leaves.");
-      tray.button("Theme: " + (enabled ? "On" : "Off"), { onClick: toggleTheme });
-      tray.button("Decorations: " + (decorations ? "On" : "Off"), { onClick: toggleDecorations });
-      tray.button("Animation: " + (motion ? "On" : "Off"), { onClick: toggleMotion });
-      tray.button("Haunt level: " + (fullHaunt ? "Full haunt" : "Classic"), { onClick: toggleHaunt });
-      tray.text("Full haunt adds ghosts, a hanging spider, pumpkin lanterns, drifting fog, embers and decorated cards. Decorations hide around active players. Reduced motion is respected.");
+      return tray.stack({ gap: 3, items: [
+        tray.text("Seanime Spooky", { style: { fontWeight: "700", fontSize: "18px" } }),
+        tray.text("Pumpkin orange, haunted corners, and autumn leaves."),
+        tray.button("Theme: " + (enabled ? "On" : "Off"), { onClick: toggleTheme }),
+        tray.button("Decorations: " + (decorations ? "On" : "Off"), { onClick: toggleDecorations }),
+        tray.button("Animation: " + (motion ? "On" : "Off"), { onClick: toggleMotion }),
+        tray.button("Haunt level: " + (fullHaunt ? "Full haunt" : "Classic"), { onClick: toggleHaunt }),
+        tray.text("Decorations hide around active players. Reduced motion is respected.")
+      ] });
     });
     ctx.dom.onReady(schedule);
     if (ctx.dom.onMainTabReady) ctx.dom.onMainTabReady(schedule);
