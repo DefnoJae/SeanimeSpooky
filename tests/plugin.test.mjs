@@ -54,7 +54,8 @@ test('loads through isolated UI callback and deduplicates simultaneous lifecycle
   const [overlay] = h.find('data-seanime-spooky-overlay');
   assert.equal(overlay.attrs['aria-hidden'], 'true');
   assert.equal(overlay.attrs.inert, '');
-  assert.equal(overlay.children.length, 6);
+  assert.equal(overlay.children.length, 11);
+  assert.equal(overlay.attrs['data-haunt'], 'full');
   assert.equal(h.hooks.navigate, undefined, 'route changes must not trigger backend DOM requests');
   assert.equal(h.errors.length, 0);
 });
@@ -72,6 +73,9 @@ test('toggles restore style and remove all decoration nodes without duplication'
   h.handlers.get('spooky-decorations')(); await h.settle();
   h.handlers.get('spooky-motion')(); await h.settle();
   assert.equal(h.find('data-seanime-spooky-overlay')[0].attrs['data-motion'], 'off');
+  h.handlers.get('spooky-haunt')(); await h.settle();
+  assert.equal(h.find('data-seanime-spooky-overlay')[0].attrs['data-haunt'], 'classic');
+  assert.equal(h.find('data-seanime-spooky-overlay').length, 1);
   assert.equal(h.errors.length, 0);
 });
 test('manifests point to public packaged payload with no privileged permissions', () => {

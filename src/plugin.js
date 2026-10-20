@@ -7,6 +7,7 @@ function init() {
     var enabled = true;
     var decorations = true;
     var motion = true;
+    var fullHaunt = true;
     var pending = Promise.resolve();
     var scheduled = false;
     var dirty = false;
@@ -58,6 +59,13 @@ function init() {
         var bats = await ctx.dom.createElement("div");
         bats.addClass("spooky-bats");
         overlay.append(bats);
+        // A fixed number of CSS-animated ornaments; no animation timers or polling.
+        var ornaments = ["spooky-ghost", "spooky-spider", "spooky-lanterns", "spooky-fog", "spooky-embers"];
+        for (var n = 0; n < ornaments.length; n++) {
+          var ornament = await ctx.dom.createElement("div");
+          ornament.addClass(ornaments[n]);
+          overlay.append(ornament);
+        }
         for (var i = 0; i < 4; i++) {
           var leaf = await ctx.dom.createElement("span");
           leaf.addClass("spooky-leaf");
@@ -66,6 +74,7 @@ function init() {
         body.append(overlay);
       }
       overlay.setAttribute("data-motion", motion ? "on" : "off");
+      overlay.setAttribute("data-haunt", fullHaunt ? "full" : "classic");
     }
 
     var tray = ctx.newTray({
@@ -82,13 +91,17 @@ function init() {
     var toggleMotion = ctx.eventHandler("spooky-motion", function () {
       motion = !motion; schedule(); tray.update();
     });
+    var toggleHaunt = ctx.eventHandler("spooky-haunt", function () {
+      fullHaunt = !fullHaunt; schedule(); tray.update();
+    });
     tray.render(function () {
       tray.text("Seanime Spooky", { style: { fontWeight: "700", fontSize: "18px" } });
       tray.text("Pumpkin orange, haunted corners, and autumn leaves.");
       tray.button("Theme: " + (enabled ? "On" : "Off"), { onClick: toggleTheme });
       tray.button("Decorations: " + (decorations ? "On" : "Off"), { onClick: toggleDecorations });
-      tray.button("Falling leaves: " + (motion ? "On" : "Off"), { onClick: toggleMotion });
-      tray.text("Moonlit castle, pumpkin clusters, bats and cobwebs. Decorations hide around active players; hidden previews no longer hide the theme. Reduced motion is respected.");
+      tray.button("Animation: " + (motion ? "On" : "Off"), { onClick: toggleMotion });
+      tray.button("Haunt level: " + (fullHaunt ? "Full haunt" : "Classic"), { onClick: toggleHaunt });
+      tray.text("Full haunt adds ghosts, a hanging spider, pumpkin lanterns, drifting fog, embers and decorated cards. Decorations hide around active players. Reduced motion is respected.");
     });
     ctx.dom.onReady(schedule);
     if (ctx.dom.onMainTabReady) ctx.dom.onMainTabReady(schedule);

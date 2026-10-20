@@ -52,8 +52,18 @@ const assert = require('node:assert/strict');
     assert.match(style.border, /233, 110, 40/);
     assert.ok(style.rules > 25);
     assert.match(style.scene, /data:image\/svg\+xml/);
+    assert.equal(await page.locator('.spooky-ghost').evaluate(e => getComputedStyle(e).animationName), 'spooky-ghost-float');
+    assert.match(await page.locator('[data-episode-card-image-container]').evaluate(e => getComputedStyle(e, '::after').backgroundImage), /data:image/);
+    await page.evaluate(() => window.spookyHandlers['spooky-haunt']());
+    await page.waitForFunction(() => document.querySelector('[data-seanime-spooky-overlay]').getAttribute('data-haunt') === 'classic');
+    assert.equal(await page.locator('.spooky-ghost').evaluate(e => getComputedStyle(e).display), 'none');
+    await page.evaluate(() => window.spookyHandlers['spooky-haunt']());
+    await page.waitForFunction(() => document.querySelector('[data-seanime-spooky-overlay]').getAttribute('data-haunt') === 'full');
     await page.emulateMedia({ reducedMotion: 'reduce' });
     assert.equal(await page.locator('.spooky-leaf').first().evaluate(e => getComputedStyle(e).display), 'none');
+    for (const cls of ['spooky-ghost','spooky-spider','spooky-fog','spooky-embers']) {
+      assert.equal(await page.locator('.' + cls).evaluate(e => getComputedStyle(e).animationName), 'none');
+    }
     await page.evaluate(() => document.body.appendChild(document.createElement('video')));
     assert.notEqual(await page.locator('[data-seanime-spooky-overlay]').evaluate(e => getComputedStyle(e).display), 'none', 'preview videos must not hide scenery');
     assert.equal(await page.locator('.spooky-pumpkins').count(), 1);
@@ -68,6 +78,6 @@ const assert = require('node:assert/strict');
     await page.evaluate(() => window.spookyHandlers['spooky-theme']());
     await page.waitForSelector('[data-seanime-spooky-style]', {state:'detached'});
     assert.equal(await page.evaluate(() => getComputedStyle(document.documentElement).getPropertyValue('--color-brand-500').trim()), '97 82 223');
-    console.log('Browser smoke passed: scenery and pumpkin markers, preview-video regression, active-player suppression, reduced motion, theme restoration.');
+    console.log('Browser smoke passed: Full haunt ornaments, Classic toggle, all reduced-motion animations, preview regression, player suppression and theme restoration.');
   } finally { await browser.close(); }
 })().catch(e => { console.error(e); process.exitCode=1; });

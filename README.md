@@ -1,5 +1,9 @@
 # Seanime Spooky
 
+## New in 1.2.0 — Full haunt
+
+Floating ghosts, a swinging hanging spider, pumpkin lantern strings, drifting ground fog, rising embers, cobweb corners on anime/episode cards, a glowing logo, and a pumpkin calendar header join the existing moon, castle, bats, graveyard and leaves. Full haunt is enabled by default; the pumpkin tray's **Haunt level** button switches to Classic. **Animation** stops all movement; system reduced-motion does the same automatically. Narrow screens simplify the decorations. All ornaments remain click-through and use CSS animations, with no polling or animation timers.
+
 A Halloween theme for Seanime inspired by the supplied orange-and-black references: pumpkin-orange controls, glowing selected navigation, warm dark surfaces, cobwebs, a haunted moon and castle, pumpkins, and optional falling autumn leaves.
 
 Version 1.1.0 adds larger moon-and-castle scenery, pumpkin clusters, drifting bats, graveyard silhouettes in anime and library headers, and pumpkin section markers. It fixes decorations disappearing when hidden preview videos are mounted. DOM setup is coalesced and no longer repeats on every route change.
